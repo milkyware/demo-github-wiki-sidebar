@@ -9,8 +9,11 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v6
+        with:
+          path: repo
 
       - name: Checkout Wiki
         uses: actions/checkout@v6
         with:
           repository: ${{ github.repository }}.wiki
+          path: wiki
