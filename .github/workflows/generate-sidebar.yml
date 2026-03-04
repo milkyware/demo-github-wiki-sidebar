@@ -1,0 +1,16 @@
+name: Generate Sidebar
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Checkout Wiki
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.repository }}.wiki
