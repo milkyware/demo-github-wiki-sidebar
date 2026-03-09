@@ -1,0 +1,65 @@
+name: GitHub Wiki Sidebar
+description: Generates a sidebar for a GitHub wiki.
+author: MilkyWare
+
+inputs:
+  wiki-path:
+    description: 'The path to the GitHub wiki repository.'
+    required: true
+  output-file:
+    description: 'The name of the output file.'
+    required: false
+    default: '_Sidebar.md'
+  root-file-name:
+    description: 'The name for the root/home page link.'
+    required: false
+    default: 'Home'
+  image-extensions:
+    description: 'A comma-separated list of image extensions to ignore.'
+    required: false
+    default: '.jpg,.jpeg,.png,.gif,.svg,.bmp'
+  link-prefix:
+    description: 'A prefix to add to all links.'
+    required: false
+    default: ''
+  link-suffix:
+    description: 'A suffix to add to all links.'
+    required: false
+    default: ''
+  exclude:
+    description: 'A comma-separated list of files to exclude.'
+    required: false
+    default: ''
+  order:
+    description: 'A comma-separated list of files to define their order.'
+    required: false
+    default: ''
+  use-page-title:
+    description: 'A boolean to indicate whether to use the page title from the file content.'
+    required: false
+    default: 'false'
+  dry-run:
+    description: 'A boolean to indicate whether to actually write the file or just print the output.'
+    required: false
+    default: 'false'
+
+outputs:
+  sidebar-content:
+    description: 'The generated sidebar content.'
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: pwsh
+      working-directory: ${{ inputs.wiki-path }}
+      run: |
+        ${{ github.action_path }}/GenerateWikiSidebar.ps1 `
+          -OutputFile '${{ inputs.output-file }}' `
+          -RootFileName '${{ inputs.root-file-name }}' `
+          -ImageExtensions ('${{ inputs.image-extensions }}' -split ',') `
+          -LinkPrefix '${{ inputs.link-prefix }}' `
+          -LinkSuffix '${{ inputs.link-suffix }}' `
+          -Exclude ('${{ inputs.exclude }}' -split ',') `
+          -Order ('${{ inputs.order }}' -split ',') `
+          -UsePageTitle ${{ inputs.use-page-title }} `
+          -DryRun ${{ inputs.dry-run }}
