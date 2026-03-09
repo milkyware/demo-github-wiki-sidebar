@@ -32,7 +32,7 @@ jobs:
       - name: Copy Content
         shell: pwsh
         run: |
-          Copy-Item -Path ${{ env.REPO_PATH }}\* -Destination ${{ env.WIKI_PATH }} -Recurse -Force
+          Copy-Item -Path ${{ env.REPO_PATH }}/wiki/*.* -Destination ${{ env.WIKI_PATH }} -Recurse -Force
 
       - uses: stefanzweifel/git-auto-commit-action@v7
         with:
