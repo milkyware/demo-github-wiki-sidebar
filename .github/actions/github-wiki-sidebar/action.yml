@@ -3,63 +3,36 @@ description: Generates a sidebar for a GitHub wiki.
 author: MilkyWare
 
 inputs:
-  wiki-path:
-    description: 'The path to the GitHub wiki repository.'
-    required: true
-  output-file:
-    description: 'The name of the output file.'
+  separator:
+    description: 'The separator used to determine the hierarchy in the sidebar.'
     required: false
-    default: '_Sidebar.md'
-  root-file-name:
-    description: 'The name for the root/home page link.'
-    required: false
-    default: 'Home'
-  image-extensions:
-    description: 'A comma-separated list of image extensions to ignore.'
-    required: false
-    default: '.jpg,.jpeg,.png,.gif,.svg,.bmp'
-  link-prefix:
-    description: 'A prefix to add to all links.'
-    required: false
-    default: ''
-  link-suffix:
-    description: 'A suffix to add to all links.'
-    required: false
-    default: ''
+    default: '__'
   exclude:
-    description: 'A comma-separated list of files to exclude.'
+    description: 'A comma-separated list of files or directories to exclude from the sidebar.'
     required: false
     default: ''
   order:
-    description: 'A comma-separated list of files to define their order.'
+    description: 'A comma-separated list of files or directories in the desired order for the sidebar.'
     required: false
     default: ''
-  use-page-title:
-    description: 'A boolean to indicate whether to use the page title from the file content.'
+  wiki-path:
+    description: The path to the GitHub wiki content. Defaults to the current directory.
     required: false
-    default: 'false'
-  dry-run:
-    description: 'A boolean to indicate whether to actually write the file or just print the output.'
-    required: false
-    default: 'false'
+    default: .
 
 outputs:
-  sidebar-content:
-    description: 'The generated sidebar content.'
+  sidebar:
+    description: 'The generated sidebar content in Markdown format.'
+    value: ${{ steps.generate-sidebar.outputs.sidebar_content }}
 
 runs:
   using: 'composite'
   steps:
     - shell: pwsh
+      id: generate-sidebar
       working-directory: ${{ inputs.wiki-path }}
       run: |
         ${{ github.action_path }}/GenerateWikiSidebar.ps1 `
-          -OutputFile '${{ inputs.output-file }}' `
-          -RootFileName '${{ inputs.root-file-name }}' `
-          -ImageExtensions ('${{ inputs.image-extensions }}' -split ',') `
-          -LinkPrefix '${{ inputs.link-prefix }}' `
-          -LinkSuffix '${{ inputs.link-suffix }}' `
-          -Exclude ('${{ inputs.exclude }}' -split ',') `
-          -Order ('${{ inputs.order }}' -split ',') `
-          -UsePageTitle ${{ inputs.use-page-title }} `
-          -DryRun ${{ inputs.dry-run }}
+          -Separator '${{ inputs.separator }}' `
+          -Exclude '${{ inputs.exclude }}' `
+          -Order '${{ inputs.order }}'
