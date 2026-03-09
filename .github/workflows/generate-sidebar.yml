@@ -6,6 +6,8 @@ on:
 jobs:
   job:
     runs-on: ubuntu-latest
+    env:
+      WIKI_REPO_PATH: ${{ github.workspace }}/wiki
     steps:
       - name: Checkout Repo
         id: checkout-repo
@@ -19,3 +21,8 @@ jobs:
         with:
           repository: ${{ github.repository }}.wiki
           path: wiki
+
+      - name: Clean Wiki Repo
+        shell: pwsh
+        run: |
+          git ls-files | ForEach-Object {Remove-Item -Path $_ }
