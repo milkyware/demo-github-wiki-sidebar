@@ -7,23 +7,25 @@ jobs:
   job:
     runs-on: ubuntu-latest
     env:
-      WIKI_REPO_PATH: ${{ github.workspace }}/wiki
+      REPO_PATH: ${{ github.workspace }}/repo
+      WIKI_PATH: ${{ github.workspace }}/wiki
     steps:
       - name: Checkout Repo
         id: checkout-repo
         uses: actions/checkout@v6
         with:
-          path: repo
+          path: ${{ env.REPO_PATH }}
 
       - name: Checkout Wiki
         uses: actions/checkout@v6
         id: checkout-wiki
         with:
           repository: ${{ github.repository }}.wiki
-          path: wiki
+          path: ${{ env.WIKI_PATH }}
 
       - name: Clean Wiki Repo
         shell: pwsh
+        working-directory: ${{ env.WIKI_PATH }}
         run: |
           git ls-files | ForEach-Object {Remove-Item -Path $_ }
 
