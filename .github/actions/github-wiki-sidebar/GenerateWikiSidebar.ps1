@@ -26,6 +26,13 @@ process
     $files = git ls-files
 
     Write-Debug "Sorting files"
+    $files = $files | Sort-Object {
+        $priorityIndex = $Priority.IndexOf($_)
+        if ($priorityIndex -ge 0) {
+            return $priorityIndex
+        }
+        return [int]::MaxValue
+    }, $_
 
     "sidebar_content=$sidebarContent" >> $env:GITHUB_OUTPUT
 }

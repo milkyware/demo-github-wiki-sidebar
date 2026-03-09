@@ -32,7 +32,15 @@ runs:
       id: generate-sidebar
       working-directory: ${{ inputs.wiki-path }}
       run: |
+        $exclude = @"
+        ${{ inputs.exclude }}
+        "@ -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
+        $order = @"
+        ${{ inputs.order }}
+        "@ -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
         ${{ github.action_path }}/GenerateWikiSidebar.ps1 `
           -Separator '${{ inputs.separator }}' `
-          -Exclude '${{ inputs.exclude }}' `
-          -Order '${{ inputs.order }}'
+          -Exclude $exclude `
+          -Order $order
